@@ -1,0 +1,18 @@
+close all;
+figure(1);
+plot(t,x(:,1),'r',t,x(:,2),'k:',t,x(:,4),'b-.','linewidth',2);
+xlabel('time(s)'),ylabel('position signal');
+legend('ideal signal', 'transient position signal','position tracking');
+figure(2);
+subplot(311);
+plot(t,z(:,1),'r',t,x(:,4),'k:','linewidth',2);
+xlabel('time(s)'),ylabel('z1,y');
+legend('practical position signal', 'position signal estimation');    
+subplot(312);
+plot(t,z(:,2),'r',t,x(:,5),'k:','linewidth',2);
+xlabel('time(s)'),ylabel('z2,dy');
+legend('practical speed signal', 'speed signal estimation');    
+subplot(313);
+plot(t,z(:,3),'r',t,x(:,6),'k:','linewidth',2);
+xlabel('time(s)'),ylabel('z3,x3');
+legend('practical uncertain part', 'uncertain part estimation'); 

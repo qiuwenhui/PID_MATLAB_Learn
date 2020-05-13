@@ -1,0 +1,50 @@
+close all;
+
+ts=0.25;
+sys=tf(1,[10,2,0]);
+dsys=c2d(sys,ts,'z');
+[num,den]=tfdata(dsys,'v');
+
+u_1=0;u_2=0;
+y_1=0;y_2=0;
+
+x=[0,0,0]';
+error_1=0;
+for k=1:1:1000
+time(k)=k*ts;
+
+%yd(k)=1.0;
+yd(k)=0.5*sin(0.025*2*pi*k*ts);
+
+%Linear model
+y(k)=-den(2)*y_1-den(3)*y_2+num(2)*u_1+num(3)*u_2;
+error(k)=yd(k)-y(k);
+
+x(1)=error(k);                % Calculating P
+x(2)=(error(k)-error_1)/ts;   % Calculating D
+x(3)=x(3)+error(k)*ts;        % Calculating I
+
+M=1;
+switch M
+   case 1       %Using PID
+	u(k)=kp*x(1)+kd*x(2)+ki*x(3);
+   case 2       %No PID
+   u(k)=error(k);
+end
+
+u_2=u_1;
+u_1=u(k);
+ 
+y_2=y_1;
+y_1=y(k);
+   
+error_1=error(k);
+end
+figure(1);
+plot(time,yd,'b',time,y,'r','linewidth',2);
+xlabel('time(s)');ylabel('yd,yosition signal)');
+legend('ideal position signal','tracking signal');
+
+figure(2);
+plot(time,yd-y,'r');
+xlabel('time(s)');ylabel('error');
